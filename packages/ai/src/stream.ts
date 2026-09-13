@@ -2238,6 +2238,7 @@ function mapOptionsForApi<TApi extends Api>(
 						hideThinkingSummary: options?.hideThinkingSummary,
 						toolChoice,
 						antigravityEndpointMode: options?.antigravityEndpointMode,
+						antigravitySensitiveWords: options?.antigravitySensitiveWords,
 					});
 				}
 
@@ -2261,6 +2262,7 @@ function mapOptionsForApi<TApi extends Api>(
 						hideThinkingSummary: options?.hideThinkingSummary,
 						toolChoice,
 						antigravityEndpointMode: options?.antigravityEndpointMode,
+						antigravitySensitiveWords: options?.antigravitySensitiveWords,
 					});
 				}
 				// Budget clamped to zero — fall through to the thinking-off path.
@@ -2278,6 +2280,7 @@ function mapOptionsForApi<TApi extends Api>(
 				thinking,
 				toolChoice,
 				antigravityEndpointMode: options?.antigravityEndpointMode,
+				antigravitySensitiveWords: options?.antigravitySensitiveWords,
 			});
 		}
 

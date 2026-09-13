@@ -93,6 +93,7 @@ const OPTION_TIERS = {
 	fallbackCreditRedemption: "server",
 	anthropicSlowMode: "server",
 	antigravityEndpointMode: "server",
+	antigravitySensitiveWords: "server",
 	fallbacks: "server",
 	disableServerSideFallback: "server",
 	textVerbosity: "server",
