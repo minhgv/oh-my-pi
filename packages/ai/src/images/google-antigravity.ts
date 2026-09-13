@@ -99,7 +99,8 @@ function buildRequest(request: ImageGenerationRequest, model: string, projectId:
 				{ category: "HARM_CATEGORY_CIVIC_INTEGRITY", threshold: "BLOCK_ONLY_HIGH" },
 			],
 		},
-		requestType: "agent",
+		// Official Antigravity omits requestType on consumer Cloud Code.
+		// "agent" is a constrained bucket that returns a detail-free 429 RESOURCE_EXHAUSTED (#11689).
 		requestId: `agent-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`,
 		userAgent: "antigravity",
 	};
