@@ -262,6 +262,7 @@ describe("Google Gemini CLI alignment", () => {
 		};
 
 		expect(payload.request.sessionId).toMatch(/^-[0-9]+$/);
+
 		expect(payload.userAgent).toBe("antigravity");
 		// Structured requestId: agent/<agentId>/<ts>/<trajectoryId>/<step>.
 		expect(payload.requestId).toMatch(/^agent\/[0-9a-f-]+\/\d+\/[0-9a-f-]+\/\d+$/);
