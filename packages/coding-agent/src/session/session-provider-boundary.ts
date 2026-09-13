@@ -24,6 +24,7 @@ import type { SessionManager } from "./session-manager";
 import {
 	cfgModelLoopGuardCheckAssistantContent,
 	cfgModelLoopGuardEnabled,
+	cfgProvidersAntigravitySensitiveWords,
 	cfgProvidersAntigravityEndpoint,
 	cfgProvidersMaxInFlightRequests,
 	cfgProvidersOpenrouterVariant,
@@ -212,11 +213,14 @@ export class SessionProviderBoundary {
 				: undefined;
 		const antigravityEndpointMode =
 			provider === "google-antigravity" ? cfgProvidersAntigravityEndpoint.get(this.#host.settings) : undefined;
+		const antigravitySensitiveWords =
+			provider === "google-antigravity" ? cfgProvidersAntigravitySensitiveWords.get(this.#host.settings) : undefined;
 
 		const preparedOptions: SimpleStreamOptions = {
 			...options,
 			...(openrouterVariant !== undefined && { openrouterVariant }),
 			...(antigravityEndpointMode !== undefined && { antigravityEndpointMode }),
+			...(antigravitySensitiveWords !== undefined && { antigravitySensitiveWords }),
 			maxInFlightRequests: validateProviderMaxInFlightRequests(
 				options.maxInFlightRequests ?? cfgProvidersMaxInFlightRequests.get(this.#host.settings),
 			),
