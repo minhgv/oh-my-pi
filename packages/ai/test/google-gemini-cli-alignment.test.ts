@@ -214,7 +214,7 @@ describe("Google Gemini CLI alignment", () => {
 				{ role: "user", content: "continue", timestamp: 2 },
 			],
 		});
-		const claudeModel = createModel("google-antigravity", "claude-sonnet-4-6", true);
+		const claudeModel = createModel("google-antigravity", "claude-sonnet-5-5", true);
 		const claudePayload = buildRequest(claudeModel, createThinkingContext(claudeModel), "proj-123", {}, true) as {
 			request: {
 				contents: Array<{
@@ -293,8 +293,8 @@ describe("Google Gemini CLI alignment", () => {
 		// The Claude profiles also lack a captured model_enum token, so
 		// the request must not emit a stale or placeholder label.
 		const cases = [
-			{ requestModelId: "claude-sonnet-4-6", maxTokens: 32 },
-			{ requestModelId: "claude-opus-4-6-thinking", maxTokens: 32 },
+			{ requestModelId: "claude-sonnet-5-5-medium", maxTokens: 32 },
+			{ requestModelId: "claude-opus-5-5-high", maxTokens: 32 },
 		];
 		for (const opts of cases) {
 			const payload = buildRequest(createModel("google-antigravity"), createContext(), "proj-123", opts, true) as {
@@ -387,7 +387,7 @@ describe("Google Gemini CLI alignment", () => {
 			return new Response('{"error":{"message":"bad request"}}', { status: 400 });
 		};
 
-		const model: Model<"google-gemini-cli"> = createModel("google-antigravity", "claude-sonnet-4-6", true);
+		const model: Model<"google-gemini-cli"> = createModel("google-antigravity", "claude-sonnet-5-5", true);
 
 		const result = await streamGoogleGeminiCli(model, createContext(), {
 			apiKey: JSON.stringify({ token: "token", projectId: "proj-123" }),

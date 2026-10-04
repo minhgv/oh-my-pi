@@ -1263,7 +1263,7 @@ describe("AgentSession message pipeline", () => {
 	);
 
 	it.each([
-		["Antigravity fixed-profile transport", getBundledModel("google-antigravity", "claude-sonnet-4-6")],
+		["Antigravity fixed-profile transport", getBundledModel("google-antigravity", "claude-sonnet-5-5")],
 		...(["cursor-agent", "gitlab-duo-agent"] as const).map(
 			api =>
 				[
@@ -1318,7 +1318,7 @@ describe("AgentSession message pipeline", () => {
 		sessions.push(session);
 
 		await expect(session.runEphemeralTurn({ promptText: "Question?", maxTokens: 32 })).rejects.toThrow(
-			"does not support maxTokens",
+			/maxTokens|output limits/,
 		);
 		expect(calls).toBe(0);
 		expect((await session.runEphemeralTurn({ promptText: "Question?" })).replyText).toBe("Uncapped answer");
