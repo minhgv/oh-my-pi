@@ -267,7 +267,6 @@ Provider-specific overrides in `packages/catalog/src/compat/rules/providers/goog
 - For class gemini; family flash; revision >=3.0.0 <3.6.0: `thinking.effortBudgets={"high":10000,"low":1000,"medium":4000,"minimal":1000}`, `thinking.mode="budget"`, `thinking.suppressWhenOff=true`.
 - For class gemini; family flash; revision >=3.6.0: `thinking.mode="google-level"`, `thinking.requiresEffort=true`.
 - For class gemini; family pro; revision >=3.0.0 <3.2.0: `thinking.suppressWhenOff=true`.
-- For models claude-opus-4-6: `thinking.efforts=["minimal","low","medium","high"]`.
 - For models gemini-3-pro: `thinking.mode="google-level"`.
 - For models gemini-3.1-flash-lite: `thinking.mode="google-level"`, `thinking.requiresEffort=true`.
 - For models gemini-3.1-pro: `thinking.effortBudgets={"high":10001,"low":1001}`, `thinking.mode="budget"`.
@@ -304,10 +303,10 @@ Provider-specific overrides in `packages/catalog/src/compat/rules/providers/goog
 - **Authored seeds**: `gemini-3-pro-image`; bundle policy `always`. Limits, capabilities, and prices are authored alongside these rows.
 - **Model Resolution & Discovery**: `googleAntigravityModelManagerOptions` & `googleGeminiCliModelManagerOptions` (`packages/catalog/src/provider-models/google.ts`) invoke `fetchAntigravityDiscoveryModels` (`packages/catalog/src/discovery/antigravity.ts`).
 - **Variant Collapsing**: Effort-tier variants are collapsed into logical specs at discovery (`packages/catalog/src/compat/collapse.ts`):
-  - `gemini-3.5-flash`: collapses `gemini-3.5-flash-extra-low`, `gemini-3.5-flash-low`, `gemini-3-flash-agent`. Antigravity budget mode maps Minimal/Low → `extra-low` (1000 tokens), Medium → `low` (4000 tokens), High → `agent` (10000 tokens). Gemini CLI maps to level transport. Alias: `gemini-3-flash`.
-  - `gemini-3.6-flash`: collapses `gemini-3.6-flash-low`, `-medium`, `-high`, `-tiered` into `gemini-3.6-flash` with `google-level` mode.
+  - `gemini-{rev}-flash` (revision ≥3.8): the template collapses `gemini-{rev}-flash-low`/`-medium`/`-high`/`-tiered` into `gemini-{rev}-flash` with `google-level` mode; Minimal/Low route to `-low`. Older flash lanes (`gemini-3.5-flash`, `gemini-3.6-flash`, `gemini-3.7-flash` and their members, plus the `gemini-3-flash` alias) are retired via `exclude-models` in `runtime/behavior.kdl`.
   - `gemini-3.1-pro`: collapses `gemini-3.1-pro-low`, `gemini-pro-agent`, `gemini-3.1-pro-high`. High effort routes to `gemini-pro-agent` because upstream `gemini-3.1-pro-high` deployment returns INVALID_ARGUMENT on streamGenerateContent.
-  - `claude-*`: bare and `-thinking` pairs collapse into `claude-*` using reviewed thinking-pair collapse (`preserveAbsentEffortRoutes: true`).
+  - `claude-sonnet-5-5`, `claude-opus-5-5`: collapse the `-low`/`-medium`/`-high` tier SKUs into budget-mode logical specs; every tier is a thinking SKU (`requires-effort`, no off route). `claude-{sonnet,opus}-4-6` pairs are retired via `exclude-models`.
+  - `claude-*-4-5`, `gemini-2.5-flash`: bare and `-thinking` pairs collapse using reviewed thinking-pair collapse (`preserveAbsentEffortRoutes: true`).
 - **Catalog Generator Integration**: `fetchAntigravityModels` (`packages/catalog/scripts/generate-models.ts`) fetches models via discovery token (falling back from `google-antigravity` to `google-gemini-cli` OAuth credentials) and fixes `baseUrl` to `https://daily-cloudcode-pa.googleapis.com`.
 
 ## Amazon Bedrock
@@ -1042,7 +1041,7 @@ The Google Antigravity provider (`google-antigravity`) routes requests to Google
 ### Catalog model handling
 - **Provider entry (`google-antigravity`)**: `packages/catalog/src/compat/rules/providers/google-antigravity.kdl` declares default model `gemini-3.1-pro`.
 - **Authored seeds**: `gemini-3-pro-image`; bundle policy `always`. Limits, capabilities, and prices are authored alongside these rows.
-- **Claude & GPT-OSS Model Availability**: Exposes Anthropic Claude models (`claude-opus-4-5`, `claude-opus-4-6`, `claude-sonnet-4-5`, `claude-sonnet-4-6`) and `gpt-oss-120b` alongside Gemini 3.x/2.5 models in `models.json` (`packages/catalog/src/models.json`).
+- **Claude & GPT-OSS Model Availability**: Exposes Anthropic Claude models (`claude-opus-4-5`, `claude-opus-5-5`, `claude-sonnet-4-5`, `claude-sonnet-5-5`) and `gpt-oss-120b` alongside Gemini 3.x/2.5 models in `models.json` (`packages/catalog/src/models.json`). The 5.5 ids are logical models collapsed from `-low`/`-medium`/`-high` wire SKUs; `claude-{sonnet,opus}-4-6` are excluded.
 
 ## Google Gemini CLI (`google-gemini-cli`)
 Google Cloud Code Assist (Gemini CLI) (`google-gemini-cli`) is Google's OAuth-authenticated developer free and workspace tier providing direct access to Gemini models over the Cloud Code Assist API endpoint (`https://cloudcode-pa.googleapis.com`). Rides the shared **Google Gemini CLI / Antigravity** transport section (`packages/ai/src/providers/google-gemini-cli.ts`).

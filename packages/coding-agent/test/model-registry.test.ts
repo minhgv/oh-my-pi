@@ -3482,7 +3482,7 @@ describe("ModelRegistry", () => {
 		});
 
 		test("does not offer bundled Antigravity chat ids absent from a fresh account roster after restart", () => {
-			const served = getBundledModels("google-antigravity").find(model => model.id === "claude-sonnet-4-6");
+			const served = getBundledModels("google-antigravity").find(model => model.id === "claude-sonnet-4-5");
 			if (!served) throw new Error("Missing bundled Antigravity control model");
 			writeModelCache(
 				"google-antigravity",
@@ -3494,7 +3494,7 @@ describe("ModelRegistry", () => {
 			);
 			const restarted = new ModelRegistry(authStorage, modelsJsonPath);
 
-			expect(restarted.find("google-antigravity", "claude-sonnet-4-6")).toBeDefined();
+			expect(restarted.find("google-antigravity", "claude-sonnet-4-5")).toBeDefined();
 			expect(restarted.find("google-antigravity", "claude-sonnet-5-5")).toBeUndefined();
 			expect(restarted.find("google-antigravity", "gemini-3-pro-image")).toBeDefined();
 		});

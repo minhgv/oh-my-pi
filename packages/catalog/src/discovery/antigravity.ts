@@ -1,5 +1,6 @@
 import { type } from "@oh-my-pi/omptype";
 import type { FetchImpl } from "@oh-my-pi/pi-utils";
+import { isExcludedModel } from "../compat/behavior";
 import { collapseVariants, type VariantCollapseTable } from "../compat/collapse";
 import type { ModelSpec } from "../types";
 import { discoveryFetch, toPositiveNumber } from "../utils";
@@ -172,6 +173,11 @@ export async function fetchAntigravityDiscoveryModels(
 	if (apiModels) {
 		for (const modelId in apiModels) {
 			const model = apiModels[modelId];
+			// Retired lanes are rule-owned (`exclude-models` in behavior.kdl);
+			// the hard denylist only covers ids no selector can express.
+			if (isExcludedModel("google-antigravity", modelId)) {
+				continue;
+			}
 			if (ANTIGRAVITY_DISCOVERY_DENYLIST.has(modelId)) {
 				continue;
 			}

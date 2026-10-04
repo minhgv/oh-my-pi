@@ -32,11 +32,12 @@ collapse {
 	// per-effort/thinking sibling wire ids, with explicit routing, ladders,
 	// budgets, and wire facts. Ported verbatim from the legacy hand tables.
 	//
-	// Cloud Code Assist serves every Gemini Flash generation from 3.6 on as
-	// `-low`/`-medium`/`-high` thinking-level SKUs plus a `-tiered` alias. One
+	// Cloud Code Assist serves every Gemini Flash generation from 3.8 on as
+	// `-low`/`-medium`/`-high` thinking-level SKUs plus a `-tiered` alias; older
+	// flash lanes are retired (exclude-models in runtime/behavior.kdl). One
 	// template per provider covers each revision discovery advertises; the
 	// minimal tier is served by the `-low` SKU (Gemini 3.7+ rejects MINIMAL).
-	variant-family "google-antigravity" "gemini-{rev}-flash" name="Gemini {rev} Flash" revision=">=3.6" {
+	variant-family "google-antigravity" "gemini-{rev}-flash" name="Gemini {rev} Flash" revision=">=3.8" {
 		members "gemini-{rev}-flash-low" "gemini-{rev}-flash-medium" "gemini-{rev}-flash-high" "gemini-{rev}-flash-tiered"
 		route "minimal" "gemini-{rev}-flash-low"
 		route "low" "gemini-{rev}-flash-low"
@@ -45,22 +46,6 @@ collapse {
 		mode "google-level"
 		efforts "minimal" "low" "medium" "high"
 		requires-effort #true
-	}
-	variant-family "google-antigravity" "gemini-3.5-flash" name="Gemini 3.5 Flash" {
-		members "gemini-3.5-flash-extra-low" "gemini-3.5-flash-low" "gemini-3-flash-agent"
-		route "off" "gemini-3.5-flash-extra-low"
-		route "minimal" "gemini-3.5-flash-extra-low"
-		route "low" "gemini-3.5-flash-extra-low"
-		route "medium" "gemini-3.5-flash-low"
-		route "high" "gemini-3-flash-agent"
-		mode "budget"
-		efforts "minimal" "low" "medium" "high"
-		budget "minimal" "1000"
-		budget "low" "1000"
-		budget "medium" "4000"
-		budget "high" "10000"
-		aliases "gemini-3-flash"
-		suppress-when-off #true
 	}
 	variant-family "google-antigravity" "gemini-3.1-pro" name="Gemini 3.1 Pro" {
 		members "gemini-3.1-pro-low" "gemini-pro-agent" "gemini-3.1-pro-high"
@@ -105,18 +90,6 @@ collapse {
 		mode "budget"
 		efforts "low" "medium" "high"
 		requires-effort #true
-	}
-	variant-family "google-antigravity" "claude-sonnet-4-6" name="Claude Sonnet 4.6" {
-		members "claude-sonnet-4-6" "claude-sonnet-4-6-thinking"
-		mode "budget"
-		efforts "minimal" "low" "medium" "high"
-		retired "claude-sonnet-4-6-thinking"
-	}
-	variant-family "google-antigravity" "claude-opus-4-6" name="Claude Opus 4.6" {
-		members "claude-opus-4-6-thinking" "claude-opus-4-6"
-		mode "budget"
-		efforts "minimal" "low" "medium" "high"
-		retired "claude-opus-4-6"
 	}
 	variant-family "google-antigravity" "claude-sonnet-4-5" name="Claude Sonnet 4.5" {
 		members "claude-sonnet-4-5" "claude-sonnet-4-5-thinking"

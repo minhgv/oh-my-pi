@@ -70,7 +70,7 @@ behavior {
 	// cover bundled/current ids; fallbacks preserve the same counter for newly
 	// discovered family ids.
 	quota-tiers provider="google-antigravity" {
-		tier "anthropic" "claude-opus-4-6"
+		tier "anthropic" "claude-opus-5-5"
 		tier "google" "gemini-3-pro" "gemma-3" "tab_flash_lite_preview" \
 			"tab_jump_flash_lite_preview"
 		tier "openai" "gpt-oss-120b" "openai/gpt-oss-120b"
@@ -81,6 +81,17 @@ behavior {
 		fallback "openai" substring="gpt-"
 		fallback "openai" substring="openai/"
 	}
+	// Retired upstream lanes: discovery may still advertise these wire ids on
+	// stale snapshots, but the roster must not surface them. Members are listed
+	// so generation-time collapse cannot resurrect a retired family;
+	// `gemini-3-flash` is the recycled alias id of the removed 3.5 family.
+	exclude-models provider="google-antigravity" exact="gemini-3.5-flash" exact="gemini-3.5-flash-extra-low" \
+		exact="gemini-3.5-flash-low" exact="gemini-3-flash-agent" exact="gemini-3-flash" exact="gemini-3.6-flash" \
+		exact="gemini-3.6-flash-low" exact="gemini-3.6-flash-medium" exact="gemini-3.6-flash-high" \
+		exact="gemini-3.6-flash-tiered" exact="gemini-3.7-flash" exact="gemini-3.7-flash-low" \
+		exact="gemini-3.7-flash-medium" exact="gemini-3.7-flash-high" exact="gemini-3.7-flash-tiered" \
+		exact="claude-sonnet-4-6" exact="claude-sonnet-4-6-thinking" \
+		exact="claude-opus-4-6" exact="claude-opus-4-6-thinking"
 	// Codex Spark consumes an independent meter. The broad chat fallback follows
 	// Spark so the specific suffix wins for discovered ids.
 	quota-tiers provider="openai-codex" {
