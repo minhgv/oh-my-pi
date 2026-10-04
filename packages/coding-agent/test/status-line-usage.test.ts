@@ -748,7 +748,7 @@ describe("usage status-line segment", () => {
 			},
 		];
 
-		const claude = makeComponent(reports, { provider: "google-antigravity", modelId: "claude-opus-4-6" });
+		const claude = makeComponent(reports, { provider: "google-antigravity", modelId: "claude-opus-5-5" });
 		claude.refreshUsageInBackground();
 		await flushUsageRefresh();
 		const claudeContent = stripVTControlCharacters(claude.getTopBorder(200).content);
@@ -802,7 +802,7 @@ describe("usage status-line segment", () => {
 					],
 				},
 			],
-			{ provider: "google-antigravity", modelId: "claude-opus-4-6" },
+			{ provider: "google-antigravity", modelId: "claude-opus-5-5" },
 		);
 
 		component.refreshUsageInBackground();

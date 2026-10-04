@@ -176,8 +176,12 @@ export const ANTIGRAVITY_MODEL_WIRE_PROFILES: Readonly<Record<string, Antigravit
 	// Claude on `daily-cloudcode-pa` rejects `maxOutputTokens > 64000` with a
 	// 400 (`Request contains an invalid argument`). The model_enum label is
 	// untracked for these ids; the backend does not require it.
-	"claude-sonnet-4-6": { maxOutputTokens: 64000 },
-	"claude-opus-4-6-thinking": { maxOutputTokens: 64000 },
+	"claude-sonnet-5-5-low": { maxOutputTokens: 64000 },
+	"claude-sonnet-5-5-medium": { maxOutputTokens: 64000 },
+	"claude-sonnet-5-5-high": { maxOutputTokens: 64000 },
+	"claude-opus-5-5-low": { maxOutputTokens: 64000 },
+	"claude-opus-5-5-medium": { maxOutputTokens: 64000 },
+	"claude-opus-5-5-high": { maxOutputTokens: 64000 },
 };
 
 /**

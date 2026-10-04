@@ -162,7 +162,7 @@ describe("antigravity usage provider", () => {
 		expect(argonLimits[0]?.label).toBe("Gemini (Argon)");
 		expect(argonLimits[0]?.amount.usedFraction).toBeCloseTo(0.98);
 		expect(argonLimits[0]?.window?.durationMs).toBe(7 * 24 * 60 * 60 * 1000);
-		const claudeLimits = scopeAntigravityLimitsForModel(report!, { modelId: "claude-sonnet-4-6" });
+		const claudeLimits = scopeAntigravityLimitsForModel(report!, { modelId: "claude-sonnet-5-5" });
 		const gptLimits = scopeAntigravityLimitsForModel(report!, { modelId: "gpt-oss-120b" });
 		expect(claudeLimits).toHaveLength(2);
 		expect(gptLimits).toHaveLength(2);
