@@ -87,16 +87,16 @@ function toolCallParts(model: Model<GoogleApi>, context: Context) {
 describe("Gemini 3 unsigned tool-call signatures (#9638, #10602)", () => {
 	it("uses the sentinel only for an unsigned first call on Cloud Code Assist", () => {
 		for (const provider of ["google-antigravity", "google-gemini-cli"]) {
-			const model = buildGeminiModel("google-gemini-cli", provider, "gemini-3.7-flash");
+			const model = buildGeminiModel("google-gemini-cli", provider, "gemini-3.8-flash");
 
-			const parallel = parallelToolCalls("google-gemini-cli", provider, "gemini-3.7-flash");
+			const parallel = parallelToolCalls("google-gemini-cli", provider, "gemini-3.8-flash");
 			const parallelCalls = toolCallParts(model, parallel);
 			expect(parallelCalls).toHaveLength(3);
 			expect(parallelCalls[0]?.thoughtSignature).toBe(VALID_SIGNATURE);
 			expect(parallelCalls[1]?.thoughtSignature).toBeUndefined();
 			expect(parallelCalls[2]?.thoughtSignature).toBeUndefined();
 
-			const unsigned = unsignedFirstCall("google-gemini-cli", provider, "gemini-3.7-flash");
+			const unsigned = unsignedFirstCall("google-gemini-cli", provider, "gemini-3.8-flash");
 			expect(toolCallParts(model, unsigned)[0]?.thoughtSignature).toBe(SENTINEL);
 		}
 	});
@@ -104,10 +104,10 @@ describe("Gemini 3 unsigned tool-call signatures (#9638, #10602)", () => {
 	it("carries the first-call bypass policy on the bundled CCA catalog entry", () => {
 		// The runtime consumes models.json rows verbatim, so the baked compat — not
 		// the KDL — is what actually reaches convertMessages for a selected model.
-		const model = getBundledModel<"google-gemini-cli">("google-antigravity", "gemini-3.7-flash");
+		const model = getBundledModel<"google-gemini-cli">("google-antigravity", "gemini-3.8-flash");
 		expect(model.compat.requiresSkipThoughtSignatureOnFirstFunctionCall).toBe(true);
 
-		const unsigned = unsignedFirstCall("google-gemini-cli", "google-antigravity", "gemini-3.7-flash");
+		const unsigned = unsignedFirstCall("google-gemini-cli", "google-antigravity", "gemini-3.8-flash");
 		expect(toolCallParts(model as Model<GoogleApi>, unsigned)[0]?.thoughtSignature).toBe(SENTINEL);
 	});
 

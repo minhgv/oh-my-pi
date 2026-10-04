@@ -148,7 +148,7 @@ describe("antigravity usage provider", () => {
 		expect(fiveHour?.window?.durationMs).toBe(5 * 60 * 60 * 1000);
 
 		expect(googleLimits.every(limit => limit.label === "Gemini")).toBeTrue();
-		const claudeLimits = scopeAntigravityLimitsForModel(report!, { modelId: "claude-sonnet-4-6" });
+		const claudeLimits = scopeAntigravityLimitsForModel(report!, { modelId: "claude-sonnet-5-5" });
 		const gptLimits = scopeAntigravityLimitsForModel(report!, { modelId: "gpt-oss-120b" });
 		expect(claudeLimits).toHaveLength(2);
 		expect(gptLimits).toHaveLength(2);
