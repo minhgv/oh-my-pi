@@ -371,19 +371,19 @@ describe("google-gemini-cli effort-tier variant routing", () => {
 		});
 	});
 
-	it("caps a discovered Claude 4.6 output limit at the 64000 the backend accepts", async () => {
-		const dir = await fs.mkdtemp(path.join(os.tmpdir(), "antigravity-claude46-cap-"));
+	it("caps a discovered Claude 4.5 output limit at the 64000 the backend accepts", async () => {
+		const dir = await fs.mkdtemp(path.join(os.tmpdir(), "antigravity-claude45-cap-"));
 		const fetcher = Object.assign(
 			(input: string | URL | Request) =>
 				Promise.resolve(
 					String(input).includes(":fetchAvailableModels")
 						? Response.json({
 								models: {
-									"claude-sonnet-4-6": {
+									"claude-sonnet-4-5": {
 										supportsThinking: true,
 										maxTokens: 1_000_000,
 										maxOutputTokens: 65_536,
-										model: "MODEL_TEST_SONNET_46",
+										model: "MODEL_TEST_SONNET_45",
 									},
 								},
 							})
@@ -398,13 +398,13 @@ describe("google-gemini-cli effort-tier variant routing", () => {
 				fetch: fetcher,
 			});
 			const result = await resolveProviderModels({ ...options, cacheDbPath: path.join(dir, "models.db") }, "online");
-			const model = result.models.find(model => model.id === "claude-sonnet-4-6");
-			if (!model) throw new Error("missing claude-sonnet-4-6");
+			const model = result.models.find(model => model.id === "claude-sonnet-4-5");
+			if (!model) throw new Error("missing claude-sonnet-4-5");
 			// With the serving account's profile and with the row's own.
 			for (const email of ["a@example.com", undefined]) {
 				const request = await captureRequest(model, undefined, { email });
-				expect(request.body.model).toBe("claude-sonnet-4-6");
-				expect(request.body.request?.labels?.model_enum).toBe("MODEL_TEST_SONNET_46");
+				expect(request.body.model).toBe("claude-sonnet-4-5");
+				expect(request.body.request?.labels?.model_enum).toBe("MODEL_TEST_SONNET_45");
 				expect(request.body.request?.generationConfig?.maxOutputTokens).toBe(64_000);
 			}
 		} finally {
