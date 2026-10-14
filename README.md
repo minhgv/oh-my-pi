@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/@oh-my-pi/pi-coding-agent"><img src="https://img.shields.io/npm/v/@oh-my-pi/pi-coding-agent?style=flat&colorA=222222&colorB=CB3837" alt="npm version"></a>
+  <a href="https://www.npmjs.com/package/@m1nh/omp"><img src="https://img.shields.io/npm/v/@m1nh/omp?style=flat&colorA=222222&colorB=CB3837" alt="npm version"></a>
   <a href="https://github.com/can1357/oh-my-pi/blob/main/packages/coding-agent/CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-keep-E05735?style=flat&colorA=222222" alt="Changelog"></a>
   <a href="https://github.com/can1357/oh-my-pi/actions"><img src="https://img.shields.io/github/actions/workflow/status/can1357/oh-my-pi/ci.yml?style=flat&colorA=222222&colorB=3FB950" alt="CI"></a>
   <a href="https://github.com/can1357/oh-my-pi/blob/main/LICENSE"><img src="https://img.shields.io/github/license/can1357/oh-my-pi?style=flat&colorA=222222&colorB=58A6FF" alt="License"></a>
@@ -34,7 +34,14 @@ The most capable agent surface that ships. Continuously tuned by real-world use 
 
 ## Install
 
-**macOS · Linux**
+**Custom Fork (`@m1nh/omp` — Bun / npm)**
+
+```sh
+bun install -g @m1nh/omp
+# hoặc: npm install -g @m1nh/omp
+```
+
+**macOS · Linux (Upstream binary)**
 
 ```sh
 curl -fsSL https://omp.sh/install | sh
@@ -44,13 +51,13 @@ Without a usable bun (or with `--binary`), the install scripts fetch the prebuil
 
 > **Alpine / musl:** the prebuilt musl binary links `libstdc++`/`libgcc` dynamically, which stock Alpine does not ship. Install them first: `apk add libstdc++ libgcc`.
 
-**Homebrew**
+**Homebrew (Upstream)**
 
 ```sh
 brew install can1357/tap/omp
 ```
 
-**Bun (recommended)**
+**Bun (Upstream)**
 
 ```sh
 bun install -g @oh-my-pi/pi-coding-agent
