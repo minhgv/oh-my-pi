@@ -1472,7 +1472,6 @@ export function buildRequest(
 			request,
 			model: wireModelId,
 			userAgent: "antigravity",
-
 		};
 	}
 

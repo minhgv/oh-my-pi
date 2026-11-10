@@ -102,6 +102,13 @@ describe("antigravity usage provider", () => {
 							remainingFraction: 0.02,
 							resetTime: "2026-09-11T00:00:00Z",
 						},
+						{
+							bucketId: "gemini-carbon-wtu-weekly",
+							displayName: "Weekly Limit Remaining",
+							window: "weekly",
+							remainingFraction: 0.25,
+							resetTime: "2026-09-11T00:00:00Z",
+						},
 					],
 				},
 				{
@@ -143,23 +150,31 @@ describe("antigravity usage provider", () => {
 		);
 
 		expect(requestedUrls).toEqual(["https://daily-cloudcode-pa.googleapis.com/v1internal:retrieveUserQuotaSummary"]);
-		expect(report?.limits).toHaveLength(7);
+		expect(report?.limits).toHaveLength(8);
 
 		const googleLimits = scopeAntigravityLimitsForModel(report!, { modelId: "gemini-3.8-flash" });
 		const weekly = googleLimits.find(limit => limit.id.endsWith(":gemini-weekly"));
 		const fiveHour = googleLimits.find(limit => limit.scope.windowId === "5h");
 		const argonWeekly = googleLimits.find(limit => limit.id.endsWith(":gemini-argon-wtu-weekly"));
+		const carbonWeekly = googleLimits.find(limit => limit.id.endsWith(":gemini-carbon-wtu-weekly"));
 		expect(weekly?.amount.usedFraction).toBeCloseTo(0.12);
 		expect(weekly?.window?.durationMs).toBe(7 * 24 * 60 * 60 * 1000);
 		expect(fiveHour?.amount.usedFraction).toBeCloseTo(0.41);
 		expect(fiveHour?.window?.label).toBe("5 Hour");
 		expect(fiveHour?.window?.durationMs).toBe(5 * 60 * 60 * 1000);
-		// Argon's weekly-only bucket is separate from the shared Gemini weekly
-		// one, so it must carry its own name, not the generic Google-counter one.
+		// Argon/Carbon weekly-only buckets are separate from the shared Gemini
+		// weekly one, so each must carry its own name, not the generic Google-counter one.
 		expect(argonWeekly?.label).toBe("Gemini (Argon)");
 		expect(argonWeekly?.amount.usedFraction).toBeCloseTo(0.98);
 		expect(argonWeekly?.window?.durationMs).toBe(7 * 24 * 60 * 60 * 1000);
-		expect(googleLimits.every(limit => limit.label === "Gemini" || limit.label === "Gemini (Argon)")).toBeTrue();
+		expect(carbonWeekly?.label).toBe("Gemini (Carbon)");
+		expect(carbonWeekly?.amount.usedFraction).toBeCloseTo(0.75);
+		expect(carbonWeekly?.window?.durationMs).toBe(7 * 24 * 60 * 60 * 1000);
+		expect(
+			googleLimits.every(
+				limit => limit.label === "Gemini" || limit.label === "Gemini (Argon)" || limit.label === "Gemini (Carbon)",
+			),
+		).toBeTrue();
 		const claudeLimits = scopeAntigravityLimitsForModel(report!, { modelId: "claude-sonnet-5-5" });
 		const gptLimits = scopeAntigravityLimitsForModel(report!, { modelId: "gpt-oss-120b" });
 		expect(claudeLimits).toHaveLength(2);

@@ -52,20 +52,21 @@ function billedAt(model: Model<Api>, timestamp: number): TokenCost {
 	return { input, output, cacheRead, cacheWrite };
 }
 
-describe("Gemini 4 Argon list-price schedule", () => {
+describe("Gemini 4 Argon and Carbon list-price schedule", () => {
 	it("pins Google's introductory and list cards on Google-billed hosts, whatever upstream reports", () => {
-		const hosts: ModelSpec<Api>[] = [
-			// stencil.so's introductory price, or a list price it already caught up to.
-			argon("google", "google-generative-ai", INTRO),
-			argon("google-vertex", "google-vertex", LIST),
-			// Antigravity discovery reports no price.
-			argon("google-antigravity", "google-gemini-cli", UNPRICED),
-			// Cursor bills Other Models at the model's API price.
-			argon("cursor", "cursor-agent", UNPRICED),
-		];
-		for (const spec of hosts) {
-			expect(costAt(SWITCH - 1, spec), `${spec.provider} before`).toEqual(INTRO);
-			expect(costAt(SWITCH, spec), `${spec.provider} after`).toEqual(LIST);
+		for (const id of ["gemini-4-argon", "gemini-4-carbon"] as const) {
+			const hosts: ModelSpec<Api>[] = [
+				// stencil.so's introductory price, or a list price it already caught up to.
+				argon("google", "google-generative-ai", INTRO, id),
+				argon("google-vertex", "google-vertex", LIST, id),
+				// Antigravity discovery reports no price.
+				argon("google-antigravity", "google-gemini-cli", UNPRICED, id),
+				...(id === "gemini-4-argon" ? [argon("cursor", "cursor-agent", UNPRICED, id)] : []),
+			];
+			for (const spec of hosts) {
+				expect(costAt(SWITCH - 1, spec), `${spec.provider}/${id} before`).toEqual(INTRO);
+				expect(costAt(SWITCH, spec), `${spec.provider}/${id} after`).toEqual(LIST);
+			}
 		}
 	});
 

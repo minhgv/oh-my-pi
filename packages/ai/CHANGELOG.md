@@ -1,6 +1,10 @@
 # Changelog
 
 ## [Unreleased]
+### Changed
+
+- Google Antigravity usage reports now label dedicated `gemini-carbon-*` weekly quota buckets as `Gemini (Carbon)`, matching `Gemini (Argon)`
+
 
 ## [18.18.4] - 2026-11-09
 

@@ -599,10 +599,16 @@ describe("model thinking derivation", () => {
 	});
 
 	it("drives Gemini 4 with thinkingLevel low/medium/high on the direct Google transports", () => {
-		// Google documents LOW/MEDIUM/HIGH for Argon and Argon Cyber Permissive:
+		// Google documents LOW/MEDIUM/HIGH for Argon and Carbon (including Cyber Permissive):
 		// `thinkingBudget` and THINKING_LEVEL_MINIMAL both return 400.
 		// https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/4-argon
-		for (const id of ["gemini-4-argon", "gemini-4-argon-cyber-permissive"]) {
+		// https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/guides/gemini-4-carbon
+		for (const id of [
+			"gemini-4-argon",
+			"gemini-4-argon-cyber-permissive",
+			"gemini-4-carbon",
+			"gemini-4-carbon-cyber-permissive",
+		]) {
 			for (const [provider, api] of [
 				["google-vertex", "google-vertex"],
 				["google", "google-generative-ai"],

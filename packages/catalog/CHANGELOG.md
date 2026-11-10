@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Added Gemini 4 Carbon (`gemini-4-carbon`) on Google Antigravity, Google Gemini API, and Google Vertex AI with `low`, `medium`, and `high` thinking levels, a 262K output limit on Antigravity, and Google's $2 / $10 introductory pricing schedule
+
 ### Fixed
 
 - Morph (`api.morphllm.com`) requests now send `x-session-id`, keeping a conversation on the worker that holds its prompt cache ([#18704](https://github.com/can1357/oh-my-pi/pull/18704) by [@wolfiesch](https://github.com/wolfiesch))

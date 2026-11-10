@@ -361,9 +361,14 @@ function buildQuotaSummaryReport(
 				: undefined;
 		// The API's bucket `displayName` is generic ("Weekly Limit Remaining"),
 		// so the `bucketId` is the only signal that a Google-counter bucket
-		// tracks its own model family; Argon's weekly-only quota is separate
-		// from the shared Gemini weekly bucket and must stay distinguishable.
-		const bucketLabel = bucket.bucketId?.toLowerCase().startsWith("gemini-argon-") ? "Gemini (Argon)" : undefined;
+		// tracks its own model family; Argon/Carbon weekly-only quotas are
+		// separate from the shared Gemini weekly bucket and must stay distinguishable.
+		const lowerBucketId = bucket.bucketId?.toLowerCase();
+		const bucketLabel = lowerBucketId?.startsWith("gemini-argon-")
+			? "Gemini (Argon)"
+			: lowerBucketId?.startsWith("gemini-carbon-")
+				? "Gemini (Carbon)"
+				: undefined;
 		for (const counterKey of counterKeys) {
 			const counterName = getQuotaSummaryCounterName(counterKey);
 			const windowId = window?.id ?? bucket.window ?? bucket.bucketId ?? "default";
