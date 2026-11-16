@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Changed
 
+- Antigravity requests now replace omp/Pi identity sentences in the system prompt with the native Antigravity identity; Cloud Code Assist content-filters third-party identity lines and answers them with a bare 429 `RESOURCE_EXHAUSTED` that retries and credential rotation cannot clear.
 - Google Antigravity usage reports now label dedicated `gemini-carbon-*` weekly quota buckets as `Gemini (Carbon)`, matching `Gemini (Argon)`
 
 

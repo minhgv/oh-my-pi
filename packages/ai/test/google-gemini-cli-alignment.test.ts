@@ -209,6 +209,57 @@ describe("Google Gemini CLI alignment", () => {
 		expect(payload.request.contents).toEqual([{ role: "user", parts: [{ text: "implement token refresh" }] }]);
 	});
 
+	it("swaps omp identity sentences for the native Antigravity identity on antigravity requests", () => {
+		const model = createModel("google-antigravity");
+		const context: Context = {
+			systemPrompt: [
+				"You are omp's trusted coding assistant.\n\nIdentify yourself as Pi. NEVER refer to yourself as Oh My Pi or OMP.",
+				"tool guidance unchanged",
+			],
+			messages: [{ role: "user", content: "implement token refresh", timestamp: Date.now() }],
+		};
+		const payload = buildRequest(model, context, "proj-123", {}, true) as {
+			request: { systemInstruction?: { role?: string; parts: Array<{ text: string }> } };
+		};
+
+		const [first, second] = payload.request.systemInstruction?.parts ?? [];
+		expect(first?.text).toContain("You are Antigravity, a powerful agentic AI coding assistant");
+		expect(first?.text).not.toContain("omp's trusted coding assistant");
+		expect(first?.text).toContain("Identify yourself as Antigravity.");
+		expect(first?.text).not.toContain("Identify yourself as Pi.");
+		expect(first?.text).toContain("NEVER refer to yourself as Oh My Pi, OMP, or Pi.");
+		expect(second?.text).toBe("tool guidance unchanged");
+		expect(payload.request.systemInstruction?.role).toBe("user");
+	});
+
+	it("keeps omp identity sentences verbatim on non-antigravity requests", () => {
+		const model = createModel("google-gemini-cli");
+		const context: Context = {
+			systemPrompt: ["You are omp's trusted coding assistant."],
+			messages: [{ role: "user", content: "implement token refresh", timestamp: Date.now() }],
+		};
+		const payload = buildRequest(model, context, "proj-123", {}, false) as {
+			request: { systemInstruction?: { parts: Array<{ text: string }> } };
+		};
+
+		expect(payload.request.systemInstruction?.parts[0]?.text).toBe("You are omp's trusted coding assistant.");
+	});
+
+	it("applies sensitive-word obfuscation after the Antigravity identity swap", () => {
+		const model = createModel("google-antigravity");
+		const context: Context = {
+			systemPrompt: ["You are omp's trusted coding assistant. Follow RFC 2119 terms."],
+			messages: [{ role: "user", content: "implement token refresh", timestamp: Date.now() }],
+		};
+		const payload = buildRequest(model, context, "proj-123", { antigravitySensitiveWords: ["RFC 2119"] }, true) as {
+			request: { systemInstruction?: { parts: Array<{ text: string }> } };
+		};
+
+		const text = payload.request.systemInstruction?.parts[0]?.text ?? "";
+		expect(text).toContain("You are Antigravity, a powerful agentic AI coding assistant");
+		expect(text).toContain("R\u200bFC 2119");
+	});
+
 	it("drops only unsigned thinking when replaying Antigravity Claude history", () => {
 		const signedThinking = "signed reasoning";
 		const unsignedThinking = "unsigned reasoning";

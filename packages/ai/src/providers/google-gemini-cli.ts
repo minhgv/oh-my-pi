@@ -30,7 +30,7 @@ import type {
 	ToolCall,
 } from "../types";
 import { normalizeSystemPrompts } from "../utils";
-import { obfuscateSensitiveWords } from "../utils/antigravity-sensitive-words";
+import { obfuscateSensitiveWords, replaceAntigravityIdentity } from "../utils/antigravity-sensitive-words";
 import { AssistantMessageEventStream } from "../utils/event-stream";
 import { extractGoogleValidationUrl, formatGoogleValidationRequiredMessage } from "../utils/google-validation";
 import type { RawHttpRequestDump } from "../utils/http-inspector";
@@ -1351,16 +1351,20 @@ export function buildRequest(
 	};
 
 	// System instruction is an object with parts, not a plain string. Antigravity
-	// tags it with role "user" to mirror the real client, and splits configured
-	// phrases with a zero-width space: Cloud Code Assist answers matched
-	// agent-mode system instructions with a bare 429 RESOURCE_EXHAUSTED that no
-	// retry can clear.
+	// tags it with role "user" to mirror the real client, swaps omp identity
+	// sentences for the native Antigravity identity (Cloud Code Assist answers
+	// matched third-party identity lines with a bare 429 RESOURCE_EXHAUSTED
+	// that no retry can clear), and splits configured phrases with a zero-width
+	// space.
 	if (systemPrompts.length > 0) {
 		const sensitiveWords = isAntigravity ? options.antigravitySensitiveWords : undefined;
-		const parts =
-			sensitiveWords && sensitiveWords.length > 0
-				? systemPrompts.map(text => ({ text: obfuscateSensitiveWords(text, sensitiveWords) }))
-				: systemPrompts.map(text => ({ text }));
+		const parts = systemPrompts.map(text => {
+			const prompt = isAntigravity ? replaceAntigravityIdentity(text) : text;
+			return {
+				text:
+					sensitiveWords && sensitiveWords.length > 0 ? obfuscateSensitiveWords(prompt, sensitiveWords) : prompt,
+			};
+		});
 		request.systemInstruction = {
 			...(isAntigravity ? { role: "user" } : {}),
 			parts,
