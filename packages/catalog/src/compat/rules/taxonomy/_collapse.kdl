@@ -47,8 +47,8 @@ collapse {
 		efforts "minimal" "low" "medium" "high"
 		requires-effort #true
 	}
-	// Gemini 4 Argon ships as `-low`/`-medium`/`-high` thinking-level SKUs,
-	// matching the three levels Google documents for the model (no minimal).
+	// Gemini 4 Argon and Carbon ship as `-low`/`-medium`/`-high` thinking-level
+	// SKUs, matching the three levels Google documents for them (no minimal).
 	variant-family "google-antigravity" "gemini-4-argon" name="Gemini 4 Argon" {
 		members "gemini-4-argon-low" "gemini-4-argon-medium" "gemini-4-argon-high"
 		route "low" "gemini-4-argon-low"

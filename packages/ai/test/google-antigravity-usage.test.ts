@@ -102,6 +102,13 @@ describe("antigravity usage provider", () => {
 							remainingFraction: 0.02,
 							resetTime: "2026-09-11T00:00:00Z",
 						},
+						{
+							bucketId: "gemini-carbon-wtu-weekly",
+							displayName: "Weekly Limit Remaining",
+							window: "weekly",
+							remainingFraction: 0.25,
+							resetTime: "2026-09-11T00:00:00Z",
+						},
 					],
 				},
 				{
@@ -143,11 +150,12 @@ describe("antigravity usage provider", () => {
 		);
 
 		expect(requestedUrls).toEqual(["https://daily-cloudcode-pa.googleapis.com/v1internal:retrieveUserQuotaSummary"]);
-		expect(report?.limits).toHaveLength(7);
+		expect(report?.limits).toHaveLength(8);
 
 		const googleLimits = scopeAntigravityLimitsForModel(report!, { modelId: "gemini-3.8-flash" });
 		const weekly = googleLimits.find(limit => limit.id.endsWith(":gemini-weekly"));
 		const fiveHour = googleLimits.find(limit => limit.scope.windowId === "5h");
+
 		expect(weekly?.amount.usedFraction).toBeCloseTo(0.12);
 		expect(weekly?.window?.durationMs).toBe(7 * 24 * 60 * 60 * 1000);
 		expect(fiveHour?.amount.usedFraction).toBeCloseTo(0.41);
@@ -162,6 +170,13 @@ describe("antigravity usage provider", () => {
 		expect(argonLimits[0]?.label).toBe("Gemini (Argon)");
 		expect(argonLimits[0]?.amount.usedFraction).toBeCloseTo(0.98);
 		expect(argonLimits[0]?.window?.durationMs).toBe(7 * 24 * 60 * 60 * 1000);
+		// Carbon's weekly-only bucket is separate the same way.
+		const carbonLimits = scopeAntigravityLimitsForModel(report!, { modelId: "gemini-4-carbon" });
+		expect(carbonLimits).toHaveLength(1);
+		expect(carbonLimits[0]?.id).toEndWith(":gemini-carbon-wtu-weekly");
+		expect(carbonLimits[0]?.label).toBe("Gemini (Carbon)");
+		expect(carbonLimits[0]?.amount.usedFraction).toBeCloseTo(0.75);
+		expect(carbonLimits[0]?.window?.durationMs).toBe(7 * 24 * 60 * 60 * 1000);
 		const claudeLimits = scopeAntigravityLimitsForModel(report!, { modelId: "claude-sonnet-5-5" });
 		const gptLimits = scopeAntigravityLimitsForModel(report!, { modelId: "gpt-oss-120b" });
 		expect(claudeLimits).toHaveLength(2);

@@ -123,6 +123,7 @@
 ### Changed
 
 - Resumed Google Antigravity behind a login warning instead of pausing it ([#18499](https://github.com/can1357/oh-my-pi/issues/18499))
+- Added Gemini 4 Carbon (`gemini-4-carbon`) on Google Antigravity, Google Gemini API, and Google Vertex AI with `low`, `medium`, and `high` thinking levels, a 262K output limit on Antigravity, and Google's $2 / $10 introductory pricing schedule
 
 ### Fixed
 

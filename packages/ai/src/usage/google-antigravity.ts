@@ -291,6 +291,7 @@ function getQuotaSummaryCounterKeys(
 	const bucketId = bucket.bucketId?.toLowerCase() ?? "";
 	const groupName = group?.displayName?.toLowerCase() ?? "";
 	if (bucketId.startsWith("gemini-argon-")) return ["google-argon"];
+	if (bucketId.startsWith("gemini-carbon-")) return ["google-carbon"];
 	if (bucketId.startsWith("gemini-") || groupName.includes("gemini")) return ["google"];
 	if (
 		bucketId.startsWith("3p-") ||
@@ -362,12 +363,13 @@ function buildQuotaSummaryReport(
 			counterKeys.length > 1
 				? `${bucket.bucketId ?? group?.displayName ?? "third-party"}:${window?.id ?? bucket.window ?? "default"}`
 				: undefined;
+
 		for (const counterKey of counterKeys) {
 			const counterName = getQuotaSummaryCounterName(counterKey);
 			const windowId = window?.id ?? bucket.window ?? bucket.bucketId ?? "default";
 			// The API's bucket `displayName` is generic ("Weekly Limit Remaining"),
-			// so Argon's dedicated weekly bucket needs its own name to stay
-			// distinguishable from the shared Gemini weekly bucket in usage views.
+			// so Argon's and Carbon's dedicated weekly buckets need their own names
+			// to stay distinguishable from the shared Gemini weekly bucket in usage views.
 			const label =
 				sharedGroup !== undefined
 					? "Claude & GPT (shared)"
@@ -375,7 +377,9 @@ function buildQuotaSummaryReport(
 						? "Gemini"
 						: counterKey === "google-argon"
 							? "Gemini (Argon)"
-							: counterName;
+							: counterKey === "google-carbon"
+								? "Gemini (Carbon)"
+								: counterName;
 			limits.push({
 				id: `${params.provider}:${counterKey}:default:${bucket.bucketId ?? windowId}`,
 				label: label ?? group?.displayName ?? bucket.displayName ?? "Usage",
